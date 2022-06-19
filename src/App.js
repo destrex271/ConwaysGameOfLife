@@ -9,6 +9,8 @@ function App() {
   const [tiles, setTiles] = useState([])
   const [tileVal, setTileVal] = useState([])
   const [done, setDone] = useState(false);
+  const [once, setOnce] = useState(true);
+  const [timer, setTimer] = useState(0)
 
   useEffect(() => {
     for(let i = 0; i < rows; i++){
@@ -21,13 +23,12 @@ function App() {
     for(let i = 0; i < rows; i++){
       const y = []
       for(let j = 0; j < cols; j++){
-        y.push(<Tile aliveInit={tileVal[i][j]} x={i} y={j} onpush={onBtnClick} />)
+        y.push(<Tile aliveInit={(tileVal[i][j] == 0)?false:true} x={i} y={j} onpush={onBtnClick} />)
       }
-      tileVal.push(y)
+      tiles.push(y)
     }
-    if(tileVal.length !== 0 && tiles.length !== 0){
-      setDone(true)
-    }
+    console.log(tileVal)
+    setDone(true)
   },[])
 
 
@@ -46,7 +47,7 @@ function App() {
     let aliveCount = 0
     for(let i = 0; i < rows; i++){
       for(let j = 0; j < cols; j++){
-        if(tileVal[i][j] === 1){
+        if(tileVal[i][j] == 1){
           aliveCount++
         }
       }
@@ -55,27 +56,181 @@ function App() {
   }
 
   const getNeighbours = (i, j) => {
-    return 3
+    let neighbours = 0
+    if((i > 0 && i < rows - 1) && (j > 0 && j < cols - 1)){
+      if(tileVal[i-1][j] == 1){
+        neighbours++
+      }
+      if(tileVal[i+1][j] == 1){
+        neighbours++
+      }
+      if(tileVal[i][j-1] == 1){
+        neighbours++
+      }
+      if(tileVal[i][j+1] == 1){
+        neighbours++
+      }
+      if(tileVal[i-1][j-1] == 1){
+        neighbours++
+      }
+      if(tileVal[i-1][j+1] == 1){
+        neighbours++
+      }
+      if(tileVal[i+1][j-1] == 1){
+        neighbours++
+      }
+      if(tileVal[i+1][j+1] == 1){
+        neighbours++
+      }
+    }else if(i == 0 && j==0){
+      if(tileVal[i+1][j] == 1){
+        neighbours++
+      }
+      if(tileVal[i][j+1] == 1){
+        neighbours++
+      }
+      if(tileVal[i+1][j+1] == 1){
+        neighbours++
+      }
+    }else if(i == 0 && j==cols-1){
+      if(tileVal[i+1][j] == 1){
+        neighbours++
+      }
+      if(tileVal[i][j-1] == 1){
+        neighbours++
+      }
+      if(tileVal[i+1][j-1] == 1){
+        neighbours++
+      }
+    }else if(i == rows-1 && j==0){
+      if(tileVal[i-1][j] == 1){
+        neighbours++
+      }
+      if(tileVal[i][j+1] == 1){
+        neighbours++
+      }
+      if(tileVal[i-1][j+1] == 1){
+        neighbours++
+      }
+    }else if(i == rows-1 && j==cols-1){
+      if(tileVal[i-1][j] == 1){
+        neighbours++
+      }
+      if(tileVal[i][j-1] == 1){
+        neighbours++
+      }
+      if(tileVal[i-1][j-1] == 1){
+        neighbours++
+      }
+    }else if(i == 0){
+      if(tileVal[i+1][j] == 1){
+        neighbours++
+      }
+      if(tileVal[i][j-1] == 1){
+        neighbours++
+      }
+      if(tileVal[i+1][j-1] == 1){
+        neighbours++
+      }
+      if(tileVal[i+1][j+1] == 1){
+        neighbours++
+      }
+      if(tileVal[i][j+1] == 1){
+        neighbours++
+      }
+    }else if(i == rows-1){
+      if(tileVal[i-1][j] == 1){
+        neighbours++
+      }
+      if(tileVal[i][j-1] == 1){
+        neighbours++
+      }
+      if(tileVal[i-1][j-1] == 1){
+        neighbours++
+      }
+      if(tileVal[i-1][j+1] == 1){
+        neighbours++
+      }
+      if(tileVal[i][j+1] == 1){
+        neighbours++
+      }
+    }else if(j == 0){
+      if(tileVal[i-1][j] == 1){
+        neighbours++
+      }
+      if(tileVal[i+1][j] == 1){
+        neighbours++
+      }
+      if(tileVal[i-1][j+1] == 1){
+        neighbours++
+      }
+      if(tileVal[i+1][j+1] == 1){
+        neighbours++
+      }
+      if(tileVal[i][j+1] == 1){
+        neighbours++
+      }
+    }else if(j == cols-1){
+      if(tileVal[i-1][j] == 1){
+        neighbours++
+      }
+      if(tileVal[i+1][j] == 1){
+        neighbours++
+      }
+      if(tileVal[i-1][j-1] == 1){
+        neighbours++
+      }
+      if(tileVal[i+1][j-1] == 1){
+        neighbours++
+      }
+      if(tileVal[i][j-1] == 1){
+        neighbours++
+      }
+    }
+    console.log(neighbours)
+    return neighbours
   }
-  const runChecks = () => {      
+  const runChecks = () => {
+    console.log("Checking....")
+    const tl = tileVal.slice()
+    const tv = tiles.slice()
     for(let i = 0; i < rows; i++){
       for(let j = 0; j < cols; j++){
         const alive = getNeighbours(i, j);
-        if(tileVal[i][j] == 1){
+        if(tl[i][j] == 1){
           if(alive < 2 || alive > 3){
-            tileVal[i][j] = 0
+            tl[i][j] = 0
+            setTileVal(tl)
+            console.log(tileVal[i][j])
           }
         }else{
           if(alive == 3){
-            tileVal[i][j] = 1
+            tl[i][j] = 1
+            setTileVal(tl)
+            console.log(tileVal[i][j])
           }
         }
       }
     }
+    setTileVal(tl)
+    setTiles([...tiles])
+  }
+  const stop = () => {
+    console.log("Test")
   }
   const playGame = () => {
-    while(aliveCount() != 0){
-      runChecks();
+    if(once){
+      setTimer(setInterval(playGame, 1));
+      const st = tileVal.slice()
+      st[10][10] = 1
+      setTileVal(st)
+      setOnce(false)
+    }
+    let x = aliveCount()
+    console.log(x)
+    if(x==0) {clearInterval(timer); stop();}
+    else{
+      runChecks()
     }
   }
 
@@ -97,113 +252,3 @@ function App() {
 }
 
 export default App;
-
-
-
-// var alive = 0
-//     if((i>0 || i<rows-1) && (j>0 || j<cols-1)){
-//       setTileVal(tileVal.slice(0,41))
-//       if(tileVal[i-1][j] == 1){
-//         alive++
-//       }
-//       if(tileVal[i+1][j] == 1){
-//         alive++
-//       }
-//       if(tileVal[i][j-1] == 1){
-//         alive++
-//       }
-//       if(tileVal[i][j+1] == 1){
-//         alive++
-//       }
-//       if(tileVal[i-1][j-1] == 1){
-//         alive++
-//       }
-//       if(tileVal[i-1][j+1] == 1){
-//         alive++
-//       }
-//       if(tileVal[i+1][j+1] == 1){
-//         alive++
-//       }
-//       if(tileVal[i+1][j-1] == 1){
-//         alive++
-//       }
-//     }else{
-//       if(i == 0){
-//         if(j == 0){
-//           if(tileVal[i+1][j] == 1){
-//             alive++
-//           }
-//           if(tileVal[i][j+1] == 1){
-//             alive++
-//           }
-//           if(tileVal[i+1][j+1] == 1){
-//             alive++
-//           }
-//         }else if(j == cols-1){
-//           if(tileVal[i+1][j] == 1){
-//             alive++
-//           }
-//           if(tileVal[i][j-1] == 1){
-//             alive++
-//           }
-//           if(tileVal[i+1][j-1] == 1){
-//             alive++
-//           }
-//         }else{
-//           if(tileVal[i+1][j] == 1){
-//             alive++
-//           }
-//           if(tileVal[i][j-1] == 1){
-//             alive++
-//           }
-//           if(tileVal[i][j+1] == 1){
-//             alive++
-//           }
-//           if(tileVal[i+1][j-1] == 1){
-//             alive++
-//           }
-//           if(tileVal[i+1][j+1] == 1){
-//             alive++
-//           }
-//         }
-//       }
-//       else if(i == rows -1){
-//         if(j == 0){
-//           if(tileVal[i-1][j] == 1){
-//             alive++
-//           }
-//           if(tileVal[i][j+1] == 1){
-//             alive++
-//           }
-//           if(tileVal[i-1][j+1] == 1){
-//             alive++
-//           }
-//         }else if(j == cols-1){
-//           if(tileVal[i-1][j] == 1){
-//             alive++
-//           }
-//           if(tileVal[i][j-1] == 1){
-//             alive++
-//           }
-//           if(tileVal[i-1][j-1] == 1){
-//             alive++
-//           }
-//         }else{
-//           if(tileVal[i-1][j] == 1){
-//             alive++
-//           }
-//           if(tileVal[i][j-1] == 1){
-//             alive++
-//           }
-//           if(tileVal[i][j+1] == 1){
-//             alive++
-//           }
-//           if(tileVal[i-1][j-1] == 1){
-//             alive++
-//           }
-//           if(tileVal[i-1][j+1] == 1){
-//             alive++
-//           }
-//         }
-//       }
-//     }
