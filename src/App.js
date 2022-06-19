@@ -201,12 +201,14 @@ function App() {
           if(alive < 2 || alive > 3){
             tl[i][j] = 0
             setTileVal(tl)
+            changeTile()
             console.log(tileVal[i][j])
           }
         }else{
           if(alive == 3){
             tl[i][j] = 1
             setTileVal(tl)
+            changeTile()
             console.log(tileVal[i][j])
           }
         }
@@ -217,13 +219,24 @@ function App() {
   }
   const stop = () => {
     console.log("Test")
+    clearTimeout(timer)
+  }
+  const changeTile = () => {
+    for(let i = 0; i < rows; i++){
+      const val = []
+      for(let j = 0; j < cols; j++){
+        val.push(<Tile activeInit={(tileVal[i][j] == 0)?false:true} x={i} y={j} />)
+      }
+    }
+    setTiles([...tiles])
   }
   const playGame = () => {
     if(once){
-      setTimer(setInterval(playGame, 1));
+      setTimer(setInterval(playGame, 6000));
       const st = tileVal.slice()
       st[10][10] = 1
       setTileVal(st)
+      changeTile()
       setOnce(false)
     }
     let x = aliveCount()
