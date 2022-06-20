@@ -1,16 +1,14 @@
 import React from 'react'
 import styles from './Tile.module.css'
+import {useState, useEffect} from 'react';
 
-import React, {useState, useEffect} from 'react';
-import styles from './Tile.module.css';
+function Tile({alive, onclick}) {
 
-function Tile(){
-
-  const [isAlive, setIsAlive] = useState(false);
+  const [isAlive, setIsAlive] = useState(alive);
 
   return(
     <div>
-      <button className={isAlive?styles.buttonClicked:styles.buttonNotClicked}></button>
+      <button className={isAlive?styles.buttonClicked:styles.buttonNotClicked} onClick={onclick} ></button>
     </div>
   );
 }
