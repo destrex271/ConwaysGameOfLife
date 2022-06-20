@@ -1,9 +1,12 @@
 import React from 'react'
+import styles from './Tile.module.css'
 
-function Tile() {
-  return (
-    <div>Tile</div>
-  )
+class Tile extends React.Component{
+  render(){
+    return(
+      <div>
+        <button className={}></button>
+      </div>
+    );
+  }
 }
-
-export default Tile
