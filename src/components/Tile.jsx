@@ -7,9 +7,7 @@ function Tile({alive, onclick}) {
   const [isAlive, setIsAlive] = useState(alive);
 
   return(
-    <div>
-      <button className={isAlive?styles.buttonClicked:styles.buttonNotClicked} onClick={onclick} ></button>
-    </div>
+      <button className={isAlive?styles.buttonClicked:styles.buttonNotClicked} onClick={() => onclick(setIsAlive)} ></button>
   );
 }
 
