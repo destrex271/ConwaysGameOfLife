@@ -25,6 +25,113 @@ function App() {
     setIsSetupSone(true)
   },[])
 
+  const getAliveNeighbours = (i, j) => {
+    let nCount = 0;
+    if((i > 0 && i < rows-1) && (j > 0 && j < cols)){
+      if(tileStateMatrix[i-1][j-1]){
+        nCount++;
+      }
+      if(tileStateMatrix[i-1][j]){
+        nCount++;
+      }
+      if(tileStateMatrix[i-1][j+1]){
+        nCount++;
+      }
+      if(tileStateMatrix[i][j-1]){
+        nCount++;
+      }
+      if(tileStateMatrix[i][j+1]){
+        nCount++;
+      }
+      if(tileStateMatrix[i+1][j-1]){
+        nCount++;
+      }
+      if(tileStateMatrix[i+1][j]){
+        nCount++;
+      }
+      if(tileStateMatrix[i+1][j+1]){
+        nCount++;
+      }
+    }else if(i === 0){
+      if(j === 0){
+        if(tileStateMatrix[i][j+1]){
+          nCount++;
+        }
+        if(tileStateMatrix[i+1][j]){
+          nCount++;
+        }
+        if(tileStateMatrix[i+1][j+1]){
+          nCount++;
+        }
+      }else if(j === cols-1){
+        if(tileStateMatrix[i][j-1]){
+          nCount++;
+        }
+        if(tileStateMatrix[i+1][j-1]){
+          nCount++;
+        }
+        if(tileStateMatrix[i+1][j]){
+          nCount++;
+        }
+      }else{
+        if(tileStateMatrix[i][j-1]){
+          nCount++;
+        }
+        if(tileStateMatrix[i][j+1]){
+          nCount++;
+        }
+        if(tileStateMatrix[i+1][j-1]){
+          nCount++;
+        }
+        if(tileStateMatrix[i+1][j]){
+          nCount++;
+        }
+        if(tileStateMatrix[i+1][j+1]){
+          nCount++;
+        }
+      }
+    }else if(i === cols-1){
+      if(j === 0){
+        if(tileStateMatrix[i][j+1]){
+          nCount++;
+        }
+        if(tileStateMatrix[i-1][j]){
+          nCount++;
+        }
+        if(tileStateMatrix[i-1][j+1]){
+          nCount++;
+        }
+      }else if(j === cols-1){
+        if(tileStateMatrix[i][j-1]){
+          nCount++;
+        }
+        if(tileStateMatrix[i-1][j-1]){
+          nCount++;
+        }
+        if(tileStateMatrix[i-1][j]){
+          nCount++;
+        }
+      }else{
+        if(tileStateMatrix[i][j-1]){
+          nCount++;
+        }
+        if(tileStateMatrix[i][j+1]){
+          nCount++;
+        }
+        if(tileStateMatrix[i-1][j-1]){
+          nCount++;
+        }
+        if(tileStateMatrix[i-1][j]){
+          nCount++;
+        }
+        if(tileStateMatrix[i-1][j+1]){
+          nCount++;
+        }
+      }
+    }
+    return nCount;
+  }
+
   const chngState = (i, j, statefn) => {
     const newMatrix = [...tileStateMatrix];
     newMatrix[i][j] = !newMatrix[i][j];
